@@ -1,18 +1,53 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 function Home() {
+    // form data and list
+    const [formData, setFormData] = useState({ name: '', email: '' });
+    const [items, setItems] = useState([]);
+
+    // form input changes
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    // inserting value
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.name || !formData.email) return;
+
+        // length of the current list
+        const newId = items.length + 1;
+
+        // Add new item with the sequential ID to the list
+        setItems([...items, { ...formData, id: newId }]);
+
+        // Clear the form
+        setFormData({ name: '', email: '' });
+    };
+
+    // clearing the form submitting
+    const handleClear = (e) => {
+        e.preventDefault();
+        setFormData({ name: '', email: '' });
+    };
     return (
         <div className="container mt-4">
             <div className="row d-flex justify-content-center">
                 <div className="col-lg-4 col-md-6 col-sm-12 border p-4">
-                    <form>
-                        <h2 className="text-center">Register Form</h2>
+                    <form onSubmit={handleSubmit}>
+                        <h1> Register Form</h1>
                         <div className="mb-3">
                             <input
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Name"
-                                name="value"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
                             />
                         </div>
                         <div className="mb-3">
@@ -20,44 +55,68 @@ function Home() {
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Email"
-                                name="text"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
                             />
                         </div>
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <input
                                 type="date"
                                 className="form-control"
                                 placeholder="Enter DOB"
                                 name="text"
                             />
-                        </div>
-                        <div className="mb-3">
+                        </div> */}
+                        {/* <div className="mb-3">
                             <input
                                 type="number"
                                 className="form-control"
                                 placeholder="Enter Age"
                                 name="value"
                             />
-                        </div>
-                        <div className="mb-3">
+                        </div> */}
+                        {/* <div className="mb-3">
                             <input
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Qualification"
                                 name="value"
                             />
-                        </div>
+                        </div> */}
 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <textarea
                                 className="form-control"
                                 placeholder="Enter Address"
                                 name="area"></textarea>
-                        </div>
-                        <div className="mt-4 text-center">
-                            <button type="button" className="btn btn-primary">Submit</button>
+                        </div> */}
+                        <div className="mt-4 text-center d-flex justify-content-between align-items-center">
+                            <button type="submit" className="btn btn-primary">Add Details</button>
+                            <button type="button" onClick={handleClear} className="btn btn-danger">Clear</button>
                         </div>
                     </form>
+                </div>
+                <div className='col-lg-8 cl-md-6 col-sm-12 '>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {items.map((item) => (
+                                <tr key={item.id}>
+                                    <th scope="row">{item.id}</th>
+                                    <td>{item.name}</td>
+                                    <td>{item.email}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
