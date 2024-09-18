@@ -4,6 +4,7 @@ function Home() {
     // form data and list
     const [formData, setFormData] = useState({ name: '', email: '' });
     const [items, setItems] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
 
     // form input changes
     const handleChange = (e) => {
@@ -19,11 +20,18 @@ function Home() {
         e.preventDefault();
         if (!formData.name || !formData.email) return;
 
-        // length of the current list
-        const newId = items.length + 1;
+        if (isEditing) {
+            // Update the item
+            setItems(items.map(item => (item.id === formData.id ? formData : item)));
+            setIsEditing(false); // Exit edit mode
+        } else {
+            // length of the current list
+            const newId = items.length + 1;
 
-        // Add new item with the sequential ID to the list
-        setItems([...items, { ...formData, id: newId }]);
+            // Add new item with the sequential ID to the list
+            setItems([...items, { ...formData, id: newId }]);
+
+        }
 
         // Clear the form
         setFormData({ name: '', email: '' });
@@ -33,13 +41,20 @@ function Home() {
     const handleClear = (e) => {
         e.preventDefault();
         setFormData({ name: '', email: '' });
+        setIsEditing(false);
+    };
+    // Handle editing an item
+    const handleEdit = (id) => {
+        const itemToEdit = items.find(item => item.id === id);
+        setFormData(itemToEdit); // Populate form with selected item data
+        setIsEditing(true); // Enable edit mode
     };
     return (
         <div className="container mt-4">
             <div className="row d-flex justify-content-center">
                 <div className="col-lg-4 col-md-6 col-sm-12 border p-4">
                     <form onSubmit={handleSubmit}>
-                        <h1> Register Form</h1>
+                        <h1>{isEditing ? 'Edit' : 'Register'}Form</h1>
                         <div className="mb-3">
                             <input
                                 type="text"
@@ -113,6 +128,11 @@ function Home() {
                                     <th scope="row">{item.id}</th>
                                     <td>{item.name}</td>
                                     <td>{item.email}</td>
+                                    <td>
+                                        <div className="text-center d-flex justify-content-between align-items-center">
+                                            <button type="submit" className="btn btn-success" onClick={() => handleEdit(item.id)}>Edit</button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
