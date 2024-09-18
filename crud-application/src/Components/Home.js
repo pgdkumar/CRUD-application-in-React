@@ -49,6 +49,11 @@ function Home() {
         setFormData(itemToEdit); // Populate form with selected item data
         setIsEditing(true); // Enable edit mode
     };
+    // Handle deleting an item
+    const handleDelete = (id) => {
+        const filteredItems = items.filter(item => item.id !== id);
+        setItems(filteredItems); // Update the state by filtering out the item
+    };
     return (
         <div className="container mt-4">
             <div className="row d-flex justify-content-center">
@@ -131,6 +136,8 @@ function Home() {
                                     <td>
                                         <div className="text-center d-flex justify-content-between align-items-center">
                                             <button type="submit" className="btn btn-success" onClick={() => handleEdit(item.id)}>Edit</button>
+                                            <button type="submit" className="btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
+
                                         </div>
                                     </td>
                                 </tr>
